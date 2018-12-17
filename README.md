@@ -1,3 +1,9 @@
+# electron todo app
+
+This is todo app using electron
+
+- This is according to tutorial https://www.udemy.com/electron-react-tutorial
+
 # electron-quick-start
 
 **Clone and run for a quick way to see Electron in action.**
