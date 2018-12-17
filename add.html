@@ -1,0 +1,19 @@
+<head></head>
+<body>
+  <form>
+    <div>
+        <label>Enter your todo</label> 
+        <input autofocus />
+    </div>
+    <button type="submit">SUBMIT</button>
+  </form>
+
+  <script>
+      document.querySelector('form').addEventListener('submit', (event) => {
+          event.preventDefault(); //prevent the form from submitting
+
+          //send data to electron to IPC
+          //#TODO
+      });
+  </script>
+</body>
