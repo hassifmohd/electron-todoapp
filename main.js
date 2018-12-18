@@ -1,13 +1,21 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, Menu} = require('electron')
+const {app, BrowserWindow, Menu, ipcMain } = require('electron')
 
 const menuTemplate = [{
   label: 'File',
   submenu: [
     {
       label: 'Add new todo',
+      accelerator: process.platform === 'darwin' ? 'Command+A' : 'Ctrl+A',
       click() {
         createAddWindow();
+      }
+    },
+    {
+      label: 'Clear todo list',
+      accelerator: process.platform === 'darwin' ? 'Command+Z' : 'Ctrl+Z',
+      click() {
+        clearTodoList();
       }
     },
     {
@@ -45,6 +53,14 @@ if (process.env.NODE_ENV !== 'production') {
   menuTemplate.push({
     label: 'Developer',
     submenu: [
+
+      //put reload menu
+      //electron has predefine menu and its called role eg: https://electronjs.org/docs/api/menu#main-process
+      {
+        role: 'reload'
+      },
+
+      //put the developer tools
       {
         label: 'Toggle Developer Tools', 
         accelerator: process.platform === 'darwin' ? 'Command+Alt+I' : 'Ctrl+Shift+I',
@@ -66,7 +82,21 @@ function createAddWindow() {
   addWindow = new BrowserWindow({width: 300, height: 200, title: 'Please add new TODO'});
 
   addWindow.loadFile('add.html');
+
+  addWindow.on('closed', () => addWindow = null); //release the memory when close the window
 }
+
+//clear the todo list
+function clearTodoList() {
+  mainWindow.webContents.send('todo:clear');
+}
+
+//addWindow will give a "TODO LIST", and this will capture it
+ipcMain.on('todo:add', (event, todoValue) => {
+  mainWindow.webContents.send('todo:add', todoValue);
+  addWindow.close();
+  // addWindow = null; //after close should be null (method 1)
+});
 
 function createWindow () {
   // Create the browser window.
